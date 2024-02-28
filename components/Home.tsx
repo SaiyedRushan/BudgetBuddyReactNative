@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Category, Transaction, TransactionsByMonth } from "../types";
 import TransactionsList from "./TransactionsList";
 import AddTransaction from "./AddTransaction";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -65,11 +66,13 @@ const Home = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 20 }}>
-      <AddTransaction insertTransaction={insertTransaction} />
-      <TransactionSummary totalExpenses={transactionsByMonth.totalExpenses} totalIncome={transactionsByMonth.totalIncome} />
-      <TransactionsList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction} />
-    </ScrollView>
+    <GestureHandlerRootView>
+      <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 20 }}>
+        <AddTransaction insertTransaction={insertTransaction} />
+        <TransactionSummary totalExpenses={transactionsByMonth.totalExpenses} totalIncome={transactionsByMonth.totalIncome} />
+        <TransactionsList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction} />
+      </ScrollView>
+    </GestureHandlerRootView>
   );
 };
 
