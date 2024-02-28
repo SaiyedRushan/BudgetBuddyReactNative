@@ -3,6 +3,7 @@ import { useSQLiteContext } from "expo-sqlite/next";
 import Card from "../components/ui/Card";
 import { useEffect, useState } from "react";
 import { Category, Transaction, TransactionsByMonth } from "../types";
+import TransactionsList from "./TransactionsList";
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -48,9 +49,17 @@ const Home = () => {
     setTransactionsByMonth(transactionsByMonth[0]);
   }
 
+  async function deleteTransaction(id: number) {
+    db.withTransactionAsync(async () => {
+      await db.runAsync(`DELETE FROM Transactions WHERE id = ?;`, [id]);
+      await getData();
+    });
+  }
+
   return (
     <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 170 }}>
       <TransactionSummary totalExpenses={transactionsByMonth.totalExpenses} totalIncome={transactionsByMonth.totalIncome} />
+      <TransactionsList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction} />
     </ScrollView>
   );
 };
