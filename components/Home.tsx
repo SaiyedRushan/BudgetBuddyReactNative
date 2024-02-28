@@ -4,6 +4,7 @@ import Card from "../components/ui/Card";
 import { useEffect, useState } from "react";
 import { Category, Transaction, TransactionsByMonth } from "../types";
 import TransactionsList from "./TransactionsList";
+import AddTransaction from "./AddTransaction";
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -56,8 +57,16 @@ const Home = () => {
     });
   }
 
+  async function insertTransaction(transaction: Transaction) {
+    db.withTransactionAsync(async () => {
+      await db.runAsync(`INSERT INTO Transactions (category_id, amount, date, description, type) VALUES (?, ?, ?, ?, ?);`, [transaction.category_id, transaction.amount, transaction.date, transaction.description, transaction.type]);
+      await getData();
+    });
+  }
+
   return (
-    <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 170 }}>
+    <ScrollView contentContainerStyle={{ padding: 15, paddingVertical: 20 }}>
+      <AddTransaction insertTransaction={insertTransaction} />
       <TransactionSummary totalExpenses={transactionsByMonth.totalExpenses} totalIncome={transactionsByMonth.totalIncome} />
       <TransactionsList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction} />
     </ScrollView>
