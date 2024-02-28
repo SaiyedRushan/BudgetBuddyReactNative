@@ -11,10 +11,13 @@ const loadDatabase = async () => {
   const dbName = "mySQLiteDB.db";
   const dbAsset = require("./assets/mySQLiteDB.db");
   const dbUri = Asset.fromModule(dbAsset).uri;
+  // Specify the path where the database file will be stored
   const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
 
+  // Check if the database file exists
   const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
   if (!fileInfo.exists) {
+    // If the file does not exist, create the directory path and download the database file
     await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}SQLite`, { intermediates: true });
     await FileSystem.downloadAsync(dbUri, dbFilePath);
   }
